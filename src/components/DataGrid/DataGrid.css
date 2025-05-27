@@ -1,0 +1,858 @@
+/* Modern Excel-like DataGrid CSS Variables */
+:root {
+  /* Modern Excel colors */
+  --datagrid-bg-primary: #ffffff;
+  --datagrid-bg-header: #f8f9fa;
+  --datagrid-bg-hover: #f0f8ff;
+  --datagrid-bg-row-hover: #f5f9ff;
+  --datagrid-bg-selected: #e7f3ff;
+  --datagrid-bg-cell-focus: #fff2cc;
+  --datagrid-border-color: #e1e5e9;
+  --datagrid-border-header: #d1d5db;
+  --datagrid-border-focus: #0078d4;
+  --datagrid-text-primary: #323130;
+  --datagrid-text-secondary: #605e5c;
+  --datagrid-text-muted: #8a8886;
+  --datagrid-accent-color: #0078d4;
+  --datagrid-accent-hover: #106ebe;
+  --datagrid-accent-light: #deecf9;
+
+  /* Modern spacing */
+  --datagrid-padding-xs: 6px;
+  --datagrid-padding-sm: 10px;
+  --datagrid-padding-md: 14px;
+  --datagrid-padding-lg: 18px;
+
+  /* Modern typography */
+  --datagrid-font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+  --datagrid-font-size-xs: 11px;
+  --datagrid-font-size-sm: 12px;
+  --datagrid-font-size-md: 13px;
+  --datagrid-font-size-lg: 14px;
+  --datagrid-font-weight-normal: 400;
+  --datagrid-font-weight-medium: 500;
+  --datagrid-font-weight-semibold: 600;
+  --datagrid-font-weight-bold: 700;
+
+  /* Modern borders */
+  --datagrid-border-width: 1px;
+  --datagrid-border-radius: 4px;
+  --datagrid-border-radius-sm: 2px;
+
+  /* Modern shadows */
+  --datagrid-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --datagrid-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  /* Smooth transitions */
+  --datagrid-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --datagrid-transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark theme - Modern Excel */
+.datagrid-theme-dark {
+  --datagrid-bg-primary: #1f1f1f;
+  --datagrid-bg-header: #2d2d2d;
+  --datagrid-bg-hover: #404040;
+  --datagrid-bg-row-hover: #333333;
+  --datagrid-bg-selected: #0078d4;
+  --datagrid-bg-cell-focus: #4a4a00;
+  --datagrid-border-color: #404040;
+  --datagrid-border-header: #606060;
+  --datagrid-text-primary: #ffffff;
+  --datagrid-text-secondary: #cccccc;
+  --datagrid-text-muted: #999999;
+  --datagrid-accent-color: #0078d4;
+  --datagrid-accent-hover: #106ebe;
+}
+
+/* Container - Modern Excel design */
+.datagrid-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--datagrid-bg-primary);
+  border: var(--datagrid-border-width) solid var(--datagrid-border-color);
+  border-radius: var(--datagrid-border-radius);
+  font-family: var(--datagrid-font-family);
+  font-size: var(--datagrid-font-size-md);
+  color: var(--datagrid-text-primary);
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--datagrid-shadow-md);
+}
+
+/* Toolbar - Modern Excel */
+.datagrid-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--datagrid-padding-md) var(--datagrid-padding-lg);
+  background-color: var(--datagrid-bg-header);
+  border-bottom: var(--datagrid-border-width) solid var(--datagrid-border-header);
+  backdrop-filter: blur(10px);
+}
+
+/* Global Filter - Modern design */
+.datagrid-global-filter {
+  flex: 1;
+  max-width: 350px;
+}
+
+.datagrid-search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.datagrid-search-input {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px 0 36px;
+  border: 1px solid hsl(214.3 31.8% 91.4%);
+  border-radius: 6px;
+  background-color: hsl(0 0% 100%);
+  color: hsl(222.2 84% 4.9%);
+  font-size: 13px;
+  font-family: var(--datagrid-font-family);
+  font-weight: 400;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+  line-height: 1;
+}
+
+.datagrid-search-input:hover {
+  border-color: hsl(214.3 31.8% 85%);
+}
+
+.datagrid-search-input:focus {
+  outline: none;
+  border-color: hsl(221.2 83.2% 53.3%);
+  box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3% / 0.2);
+}
+
+.datagrid-search-input:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.datagrid-search-input::placeholder {
+  color: hsl(215.4 16.3% 46.9%);
+  font-weight: 400;
+}
+
+.datagrid-search-icon {
+  position: absolute;
+  left: var(--datagrid-padding-sm);
+  color: var(--datagrid-text-muted);
+  pointer-events: none;
+  transition: color var(--datagrid-transition-fast);
+}
+
+.datagrid-search-input:focus + .datagrid-search-icon {
+  color: var(--datagrid-accent-color);
+}
+
+/* Table Container - Modern Excel */
+.datagrid-table-container {
+  overflow: auto;
+  flex: 1;
+  position: relative;
+  background-color: var(--datagrid-bg-primary);
+}
+
+/* Modern scrollbar */
+.datagrid-table-container::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+.datagrid-table-container::-webkit-scrollbar-track {
+  background: var(--datagrid-bg-header);
+  border-radius: 2px;
+}
+
+.datagrid-table-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 6px;
+  border: 2px solid var(--datagrid-bg-header);
+  transition: background var(--datagrid-transition-fast);
+}
+
+.datagrid-table-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.datagrid-table-container::-webkit-scrollbar-corner {
+  background: var(--datagrid-bg-header);
+}
+
+/* Table - Modern Excel design */
+.datagrid-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background-color: var(--datagrid-bg-primary);
+}
+
+/* Header - Modern Excel design */
+.datagrid-header {
+  background-color: var(--datagrid-bg-header);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.datagrid-header-row {
+  border-bottom: 2px solid var(--datagrid-border-header);
+}
+
+.datagrid-header-cell {
+  position: relative;
+  padding: var(--datagrid-padding-sm) var(--datagrid-padding-md);
+  text-align: left;
+  font-weight: var(--datagrid-font-weight-semibold);
+  font-size: var(--datagrid-font-size-md);
+  color: var(--datagrid-text-primary);
+  border-right: var(--datagrid-border-width) solid var(--datagrid-border-color);
+  user-select: none;
+  vertical-align: top;
+  background-color: var(--datagrid-bg-header);
+  transition: all var(--datagrid-transition-fast);
+}
+
+.datagrid-header-cell:last-child {
+  border-right: var(--datagrid-border-width) solid var(--datagrid-border-color);
+}
+
+.datagrid-header-cell.sortable {
+  cursor: pointer;
+}
+
+.datagrid-header-cell.sortable:hover {
+  background-color: var(--datagrid-bg-hover);
+  transform: translateY(-1px);
+}
+
+.datagrid-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--datagrid-padding-xs);
+  min-height: 18px;
+  margin-bottom: 2px;
+}
+
+.datagrid-header-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--datagrid-font-weight-semibold);
+}
+
+.datagrid-sort-indicator {
+  display: flex;
+  align-items: center;
+  color: var(--datagrid-text-secondary);
+  font-size: var(--datagrid-font-size-sm);
+  opacity: 0.6;
+  transition: all var(--datagrid-transition-fast);
+}
+
+.datagrid-header-cell.sortable:hover .datagrid-sort-indicator {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.datagrid-header-cell.sorted-asc .sort-asc,
+.datagrid-header-cell.sorted-desc .sort-desc {
+  color: var(--datagrid-accent-color);
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Column Filter - Optimized compact design */
+.datagrid-column-filter {
+  margin-top: var(--datagrid-padding-xs);
+  padding: var(--datagrid-padding-xs) 0;
+}
+
+.datagrid-filter-input {
+  width: 100%;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid hsl(214.3 31.8% 91.4%);
+  border-radius: 6px;
+  background-color: hsl(0 0% 100%);
+  color: hsl(222.2 84% 4.9%);
+  font-size: 11px;
+  font-family: var(--datagrid-font-family);
+  font-weight: 400;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+  line-height: 1;
+}
+
+.datagrid-filter-input:hover {
+  border-color: hsl(214.3 31.8% 85%);
+}
+
+.datagrid-filter-input:focus {
+  outline: none;
+  border-color: hsl(221.2 83.2% 53.3%);
+  box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3% / 0.2);
+}
+
+.datagrid-filter-input:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.datagrid-filter-input::placeholder {
+  color: hsl(215.4 16.3% 46.9%);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.datagrid-filter-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Column Resizer - Modern Excel with smooth interaction */
+.datagrid-column-resizer {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  width: 4px;
+  height: 100%;
+  cursor: col-resize;
+  background-color: transparent;
+  z-index: 15;
+  transition: all var(--datagrid-transition-fast);
+}
+
+.datagrid-column-resizer::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  width: 2px;
+  height: 80%;
+  background-color: transparent;
+  transform: translateX(-50%);
+  transition: all var(--datagrid-transition-fast);
+  border-radius: 1px;
+}
+
+.datagrid-header-cell:hover .datagrid-column-resizer::before,
+.datagrid-column-resizer:hover::before {
+  background-color: var(--datagrid-accent-color);
+  box-shadow: 0 0 4px var(--datagrid-accent-color);
+}
+
+.datagrid-column-resizer:active::before {
+  background-color: var(--datagrid-accent-hover);
+  width: 3px;
+  box-shadow: 0 0 6px var(--datagrid-accent-hover);
+}
+
+/* Body - Modern Excel design with smooth hover effects */
+.datagrid-body-row {
+  transition: all var(--datagrid-transition-fast);
+  position: relative;
+}
+
+.datagrid-body-row:hover {
+  background-color: var(--datagrid-bg-row-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 120, 212, 0.1);
+  z-index: 1;
+}
+
+.datagrid-body-row:nth-child(even) {
+  background-color: rgba(248, 249, 250, 0.5);
+}
+
+.datagrid-body-row:nth-child(even):hover {
+  background-color: var(--datagrid-bg-row-hover);
+}
+
+.datagrid-body-cell {
+  padding: var(--datagrid-padding-md) var(--datagrid-padding-lg);
+  border-right: var(--datagrid-border-width) solid var(--datagrid-border-color);
+  border-bottom: var(--datagrid-border-width) solid var(--datagrid-border-color);
+  vertical-align: middle;
+  font-size: var(--datagrid-font-size-md);
+  color: var(--datagrid-text-primary);
+  background-color: inherit;
+  transition: all var(--datagrid-transition-fast);
+  position: relative;
+}
+
+.datagrid-body-cell:last-child {
+  border-right: var(--datagrid-border-width) solid var(--datagrid-border-color);
+}
+
+.datagrid-body-cell:hover {
+  background-color: var(--datagrid-bg-cell-focus);
+  cursor: pointer;
+}
+
+.datagrid-cell-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+
+.datagrid-cell-content.wrap {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.datagrid-cell-content.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Header icon styling */
+.datagrid-header-icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+/* Context Menu Styles */
+.datagrid-context-menu {
+  background: var(--datagrid-bg-primary);
+  border: 1px solid var(--datagrid-border-color);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 4px 0;
+  min-width: 160px;
+  font-size: 14px;
+  z-index: 9999;
+}
+
+.datagrid-context-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  user-select: none;
+}
+
+.datagrid-context-menu-item:hover:not(.disabled) {
+  background-color: var(--datagrid-bg-row-hover);
+}
+
+.datagrid-context-menu-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.datagrid-context-menu-icon {
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  width: 16px;
+  justify-content: center;
+}
+
+.datagrid-context-menu-label {
+  flex: 1;
+}
+
+.datagrid-context-menu-separator {
+  height: 1px;
+  background-color: var(--datagrid-border-color);
+  margin: 4px 0;
+}
+
+/* Empty State - Modern Excel */
+.datagrid-empty-row {
+  border-bottom: none;
+}
+
+.datagrid-empty-cell {
+  padding: var(--datagrid-padding-lg) * 2;
+  text-align: center;
+  color: var(--datagrid-text-muted);
+  font-style: italic;
+  font-size: var(--datagrid-font-size-lg);
+  background-color: var(--datagrid-bg-primary);
+}
+
+.datagrid-empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--datagrid-padding-md);
+}
+
+.datagrid-empty-content::before {
+  content: '📊';
+  font-size: 32px;
+  opacity: 0.6;
+}
+
+/* Checkbox - Shadcn style with better visibility */
+.datagrid-checkbox {
+  appearance: none;
+  margin: 0;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  border: 2px solid hsl(214.3 31.8% 80%);
+  border-radius: 4px;
+  background-color: hsl(0 0% 100%);
+  position: relative;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+}
+
+.datagrid-checkbox:hover {
+  border-color: hsl(214.3 31.8% 70%);
+  background-color: hsl(210 40% 98%);
+  box-shadow: 0 2px 4px 0 hsl(0 0% 0% / 0.1);
+}
+
+.datagrid-checkbox:focus {
+  outline: none;
+  border-color: hsl(221.2 83.2% 53.3%);
+  box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3% / 0.2);
+}
+
+.datagrid-checkbox:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.datagrid-checkbox:checked {
+  background-color: hsl(221.2 83.2% 53.3%);
+  border-color: hsl(221.2 83.2% 53.3%);
+  color: hsl(210 40% 98%);
+}
+
+.datagrid-checkbox:checked:hover {
+  background-color: hsl(221.2 83.2% 48%);
+  border-color: hsl(221.2 83.2% 48%);
+}
+
+.datagrid-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 6px;
+  height: 10px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 1;
+}
+
+.datagrid-checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.datagrid-checkbox:disabled:hover {
+  border-color: hsl(214.3 31.8% 91.4%);
+  background-color: hsl(0 0% 100%);
+}
+
+/* Density Variants */
+.datagrid-density-compact .datagrid-header-cell,
+.datagrid-density-compact .datagrid-body-cell {
+  padding: var(--datagrid-padding-xs) var(--datagrid-padding-sm);
+  font-size: var(--datagrid-font-size-sm);
+}
+
+.datagrid-density-compact .datagrid-filter-input {
+  height: 24px;
+  padding: 0 6px;
+  font-size: 10px;
+}
+
+.datagrid-density-comfortable .datagrid-header-cell,
+.datagrid-density-comfortable .datagrid-body-cell {
+  padding: var(--datagrid-padding-sm) var(--datagrid-padding-md);
+}
+
+.datagrid-density-spacious .datagrid-header-cell,
+.datagrid-density-spacious .datagrid-body-cell {
+  padding: var(--datagrid-padding-lg) var(--datagrid-padding-xl);
+  font-size: var(--datagrid-font-size-lg);
+}
+
+.datagrid-density-spacious .datagrid-filter-input {
+  height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+/* Theme Variants - Improved Dark Mode */
+.datagrid-theme-dark {
+  --datagrid-bg-primary: hsl(224 71% 4%);
+  --datagrid-bg-secondary: hsl(220 13% 9%);
+  --datagrid-bg-header: hsl(220 13% 9%);
+  --datagrid-bg-hover: hsl(220 13% 12%);
+  --datagrid-bg-row-hover: hsl(220 13% 12%);
+  --datagrid-bg-cell-focus: hsl(220 13% 15%);
+  --datagrid-text-primary: hsl(210 40% 98%);
+  --datagrid-text-secondary: hsl(215 20.2% 65.1%);
+  --datagrid-text-muted: hsl(215.4 16.3% 56.9%);
+  --datagrid-border-color: hsl(217.2 32.6% 17.5%);
+  --datagrid-border-header: hsl(217.2 32.6% 20%);
+  --datagrid-border-focus: hsl(221.2 83.2% 53.3%);
+  --datagrid-accent-color: hsl(221.2 83.2% 53.3%);
+  --datagrid-accent-hover: hsl(221.2 83.2% 48%);
+  --datagrid-accent-light: hsl(221.2 83.2% 53.3% / 0.2);
+}
+
+.datagrid-theme-dark .datagrid-filter-input,
+.datagrid-theme-dark .datagrid-search-input,
+.datagrid-theme-dark .datagrid-page-size-select,
+.datagrid-theme-dark .datagrid-page-jump-input {
+  background-color: hsl(224 71% 4%);
+  border-color: hsl(217.2 32.6% 17.5%);
+  color: hsl(210 40% 98%);
+}
+
+.datagrid-theme-dark .datagrid-filter-input:hover,
+.datagrid-theme-dark .datagrid-search-input:hover,
+.datagrid-theme-dark .datagrid-page-size-select:hover,
+.datagrid-theme-dark .datagrid-page-jump-input:hover {
+  border-color: hsl(217.2 32.6% 25%);
+  background-color: hsl(220 13% 9%);
+}
+
+.datagrid-theme-dark .datagrid-filter-input:focus,
+.datagrid-theme-dark .datagrid-search-input:focus,
+.datagrid-theme-dark .datagrid-page-size-select:focus,
+.datagrid-theme-dark .datagrid-page-jump-input:focus {
+  border-color: hsl(221.2 83.2% 53.3%);
+  box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3% / 0.2);
+}
+
+.datagrid-theme-dark .datagrid-checkbox {
+  background-color: hsl(224 71% 4%);
+  border-color: hsl(217.2 32.6% 17.5%);
+}
+
+.datagrid-theme-dark .datagrid-checkbox:hover {
+  border-color: hsl(217.2 32.6% 25%);
+  background-color: hsl(220 13% 9%);
+}
+
+.datagrid-theme-dark .datagrid-checkbox:checked {
+  background-color: hsl(221.2 83.2% 53.3%);
+  border-color: hsl(221.2 83.2% 53.3%);
+}
+
+.datagrid-theme-dark .datagrid-page-button {
+  background-color: hsl(224 71% 4%);
+  border-color: hsl(217.2 32.6% 17.5%);
+  color: hsl(210 40% 98%);
+}
+
+.datagrid-theme-dark .datagrid-page-button:hover:not(:disabled) {
+  background-color: hsl(221.2 83.2% 53.3%);
+  border-color: hsl(221.2 83.2% 53.3%);
+  color: white;
+}
+
+.datagrid-theme-dark .datagrid-body-row:nth-child(even) {
+  background-color: hsl(220 13% 6%);
+}
+
+.datagrid-theme-dark .datagrid-body-row:hover {
+  background-color: hsl(220 13% 12%) !important;
+}
+
+/* Pagination - Modern Excel design */
+.datagrid-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--datagrid-padding-md) var(--datagrid-padding-lg);
+  background-color: var(--datagrid-bg-header);
+  border-top: var(--datagrid-border-width) solid var(--datagrid-border-header);
+  gap: var(--datagrid-padding-lg);
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.datagrid-pagination-info {
+  color: var(--datagrid-text-secondary);
+  font-size: var(--datagrid-font-size-sm);
+  font-weight: var(--datagrid-font-weight-medium);
+}
+
+.datagrid-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--datagrid-padding-lg);
+}
+
+.datagrid-page-size {
+  display: flex;
+  align-items: center;
+  gap: var(--datagrid-padding-sm);
+}
+
+.datagrid-page-size-label {
+  font-size: var(--datagrid-font-size-sm);
+  color: var(--datagrid-text-secondary);
+  font-weight: var(--datagrid-font-weight-medium);
+}
+
+.datagrid-page-size-select {
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid hsl(214.3 31.8% 91.4%);
+  border-radius: 6px;
+  background-color: hsl(0 0% 100%);
+  color: hsl(222.2 84% 4.9%);
+  font-size: 12px;
+  font-family: var(--datagrid-font-family);
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+  line-height: 1;
+}
+
+.datagrid-page-size-select:hover {
+  border-color: hsl(214.3 31.8% 85%);
+}
+
+.datagrid-page-size-select:focus {
+  outline: none;
+  border-color: hsl(221.2 83.2% 53.3%);
+  box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3% / 0.2);
+}
+
+.datagrid-page-size-select:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.datagrid-page-navigation {
+  display: flex;
+  align-items: center;
+  gap: var(--datagrid-padding-xs);
+}
+
+.datagrid-page-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: var(--datagrid-border-width) solid var(--datagrid-border-color);
+  border-radius: var(--datagrid-border-radius);
+  background-color: var(--datagrid-bg-primary);
+  color: var(--datagrid-text-primary);
+  font-size: var(--datagrid-font-size-sm);
+  cursor: pointer;
+  transition: all var(--datagrid-transition-fast);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.datagrid-page-button:hover:not(:disabled) {
+  background-color: var(--datagrid-accent-color);
+  color: white;
+  border-color: var(--datagrid-accent-color);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 120, 212, 0.2);
+}
+
+.datagrid-page-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.datagrid-page-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.datagrid-page-info {
+  padding: var(--datagrid-padding-xs) var(--datagrid-padding-sm);
+  font-size: var(--datagrid-font-size-sm);
+  color: var(--datagrid-text-secondary);
+  font-weight: var(--datagrid-font-weight-medium);
+  white-space: nowrap;
+  background-color: var(--datagrid-bg-primary);
+  border-radius: var(--datagrid-border-radius);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.datagrid-page-jump {
+  display: flex;
+  align-items: center;
+  gap: var(--datagrid-padding-sm);
+}
+
+.datagrid-page-jump-label {
+  font-size: var(--datagrid-font-size-sm);
+  color: var(--datagrid-text-secondary);
+  font-weight: var(--datagrid-font-weight-medium);
+}
+
+.datagrid-page-jump-input {
+  width: 60px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid hsl(214.3 31.8% 91.4%);
+  border-radius: 6px;
+  background-color: hsl(0 0% 100%);
+  color: hsl(222.2 84% 4.9%);
+  font-size: 12px;
+  font-family: var(--datagrid-font-family);
+  font-weight: 400;
+  text-align: center;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+  line-height: 1;
+}
+
+.datagrid-page-jump-input:hover {
+  border-color: hsl(214.3 31.8% 85%);
+}
+
+.datagrid-page-jump-input:focus {
+  outline: none;
+  border-color: hsl(221.2 83.2% 53.3%);
+  box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3% / 0.2);
+}
+
+.datagrid-page-jump-input:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .datagrid-pagination {
+    flex-direction: column;
+    gap: var(--datagrid-padding-sm);
+  }
+
+  .datagrid-pagination-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .datagrid-page-jump {
+    order: -1;
+  }
+}

@@ -1,0 +1,208 @@
+/* Demo Controls Styling */
+.demo-controls {
+  background: white;
+  border: 1px solid hsl(214.3 31.8% 91.4%);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.demo-controls h2 {
+  margin: 0 0 20px 0;
+  color: hsl(222.2 84% 4.9%);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.control-section {
+  background: hsl(210 40% 98%);
+  border: 1px solid hsl(214.3 31.8% 91.4%);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.control-section h3 {
+  margin: 0 0 16px 0;
+  color: hsl(222.2 84% 4.9%);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: hsl(222.2 84% 4.9%);
+  font-weight: 500;
+}
+
+.control-item span {
+  flex: 1;
+}
+
+/* Demo Checkbox - Shadcn style */
+.demo-checkbox {
+  appearance: none;
+  margin: 0;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  border: 2px solid hsl(214.3 31.8% 80%);
+  border-radius: 4px;
+  background-color: hsl(0 0% 100%);
+  position: relative;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+}
+
+.demo-checkbox:hover {
+  border-color: hsl(214.3 31.8% 70%);
+  background-color: hsl(210 40% 98%);
+  box-shadow: 0 2px 4px 0 hsl(0 0% 0% / 0.1);
+}
+
+.demo-checkbox:focus {
+  outline: none;
+  border-color: hsl(221.2 83.2% 53.3%);
+  box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3% / 0.2);
+}
+
+.demo-checkbox:checked {
+  background-color: hsl(221.2 83.2% 53.3%);
+  border-color: hsl(221.2 83.2% 53.3%);
+  color: hsl(210 40% 98%);
+}
+
+.demo-checkbox:checked:hover {
+  background-color: hsl(221.2 83.2% 48%);
+  border-color: hsl(221.2 83.2% 48%);
+}
+
+.demo-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 6px;
+  height: 10px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 1;
+}
+
+/* Demo Select - Shadcn style */
+.demo-select {
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid hsl(214.3 31.8% 91.4%);
+  border-radius: 6px;
+  background-color: hsl(0 0% 100%);
+  color: hsl(222.2 84% 4.9%);
+  font-size: 12px;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+  line-height: 1;
+  min-width: 120px;
+}
+
+.demo-select:hover {
+  border-color: hsl(214.3 31.8% 85%);
+}
+
+.demo-select:focus {
+  outline: none;
+  border-color: hsl(221.2 83.2% 53.3%);
+  box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3% / 0.2);
+}
+
+/* Dark Mode Support */
+.datagrid-theme-dark .demo-controls {
+  background: hsl(224 71% 4%);
+  border-color: hsl(217.2 32.6% 17.5%);
+  color: hsl(210 40% 98%);
+}
+
+.datagrid-theme-dark .demo-controls h2 {
+  color: hsl(210 40% 98%);
+}
+
+.datagrid-theme-dark .control-section {
+  background: hsl(220 13% 9%);
+  border-color: hsl(217.2 32.6% 17.5%);
+}
+
+.datagrid-theme-dark .control-section h3 {
+  color: hsl(210 40% 98%);
+}
+
+.datagrid-theme-dark .control-item {
+  color: hsl(210 40% 98%);
+}
+
+.datagrid-theme-dark .demo-select {
+  background-color: hsl(224 71% 4%);
+  border-color: hsl(217.2 32.6% 17.5%);
+  color: hsl(210 40% 98%);
+}
+
+.datagrid-theme-dark .demo-select:hover {
+  border-color: hsl(217.2 32.6% 25%);
+}
+
+.datagrid-theme-dark .demo-select:focus {
+  border-color: hsl(221.2 83.2% 53.3%);
+  box-shadow: 0 0 0 2px hsl(221.2 83.2% 53.3% / 0.2);
+}
+
+.datagrid-theme-dark .demo-checkbox {
+  background-color: hsl(224 71% 4%);
+  border-color: hsl(217.2 32.6% 17.5%);
+}
+
+.datagrid-theme-dark .demo-checkbox:hover {
+  border-color: hsl(217.2 32.6% 25%);
+  background-color: hsl(220 13% 9%);
+}
+
+.datagrid-theme-dark .demo-checkbox:checked {
+  background-color: hsl(221.2 83.2% 53.3%);
+  border-color: hsl(221.2 83.2% 53.3%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-controls {
+    padding: 16px;
+  }
+
+  .control-item {
+    font-size: 12px;
+  }
+}
