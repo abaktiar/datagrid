@@ -183,6 +183,10 @@ const DataGridComponent = function DataGrid<T = unknown>({
     enableFilters: enableFiltering,
     enableGlobalFilter: enableFiltering,
     enableColumnResizing,
+
+    // Enable smooth real-time column resizing
+    columnResizeMode: 'onChange',
+    columnResizeDirection: 'ltr',
   });
 
   const containerClasses = ['datagrid-container', `datagrid-density-${density}`, `datagrid-theme-${theme}`, className]
@@ -220,7 +224,10 @@ const DataGridComponent = function DataGrid<T = unknown>({
 
   const tableContent = (
     <div className='datagrid-table-container' onContextMenu={handleTableRightClick}>
-      <table className={tableClasses}>
+      <table
+        className={tableClasses}
+        data-resizing={table.getState().columnSizingInfo.isResizingColumn ? 'true' : 'false'}
+      >
         <TableHeader table={table} className={headerClassName} customRenderer={customHeaderRenderer} />
         <TableBody
           table={table}

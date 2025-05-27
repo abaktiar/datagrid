@@ -357,6 +357,35 @@
   box-shadow: 0 0 6px var(--datagrid-accent-hover);
 }
 
+/* Enhanced resizing states for smooth feedback */
+.datagrid-table[data-resizing="true"] {
+  user-select: none;
+  cursor: col-resize;
+}
+
+.datagrid-table[data-resizing="true"] .datagrid-header-cell {
+  transition: width var(--datagrid-transition-fast);
+}
+
+.datagrid-table[data-resizing="true"] .datagrid-body-cell {
+  transition: width var(--datagrid-transition-fast);
+}
+
+/* Active resizing state */
+.datagrid-header-cell[data-resizing="true"] {
+  background-color: var(--datagrid-accent-light);
+  border-right-color: var(--datagrid-accent-color);
+  border-right-width: 2px;
+}
+
+.datagrid-header-cell[data-resizing="true"] .datagrid-column-resizer::before {
+  background-color: var(--datagrid-accent-hover);
+  width: 3px;
+  box-shadow: 0 0 8px var(--datagrid-accent-hover);
+  height: 100%;
+  top: 0;
+}
+
 /* Body - Modern Excel design with smooth hover effects */
 .datagrid-body-row {
   transition: all var(--datagrid-transition-fast);

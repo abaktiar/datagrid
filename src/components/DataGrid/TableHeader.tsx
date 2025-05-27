@@ -13,14 +13,18 @@ export function TableHeader<T = any>({
   className = '',
   customRenderer
 }: TableHeaderProps<T>) {
+  // Get resizing state from table
+  const isResizing = table.getState().columnSizingInfo.isResizingColumn;
+
   return (
     <thead className={`datagrid-header ${className}`}>
-      {table.getHeaderGroups().map(headerGroup => (
-        <tr key={headerGroup.id} className="datagrid-header-row">
-          {headerGroup.headers.map(header => {
-            const column = header.column.columnDef as DataGridColumn<T>
-            const canSort = header.column.getCanSort()
-            const sortDirection = header.column.getIsSorted()
+      {table.getHeaderGroups().map((headerGroup) => (
+        <tr key={headerGroup.id} className='datagrid-header-row'>
+          {headerGroup.headers.map((header) => {
+            const column = header.column.columnDef as DataGridColumn<T>;
+            const canSort = header.column.getCanSort();
+            const sortDirection = header.column.getIsSorted();
+            const isColumnResizing = header.column.getIsResizing();
 
             const headerConfig = column.headerConfig;
             const headerClassName = `datagrid-header-cell ${canSort ? 'sortable' : ''} ${
@@ -40,7 +44,8 @@ export function TableHeader<T = any>({
                 className={headerClassName}
                 style={headerStyle}
                 onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
-                title={headerConfig?.tooltip}>
+                title={headerConfig?.tooltip}
+                data-resizing={isColumnResizing ? 'true' : 'false'}>
                 <div className='datagrid-header-content'>
                   {(customRenderer && customRenderer(column)) || (
                     <>
@@ -133,5 +138,5 @@ export function TableHeader<T = any>({
         </tr>
       ))}
     </thead>
-  )
+  );
 }
