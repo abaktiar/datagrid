@@ -153,7 +153,8 @@
 
 /* Table Container - Modern Excel */
 .datagrid-table-container {
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: auto;
   flex: 1;
   position: relative;
   background-color: var(--datagrid-bg-primary);
@@ -191,6 +192,53 @@
   border-collapse: collapse;
   table-layout: fixed;
   background-color: var(--datagrid-bg-primary);
+}
+
+/* Responsive table layout */
+.datagrid-table.auto-layout {
+  table-layout: auto;
+  min-width: 100%;
+}
+
+/* Container handles overflow intelligently */
+.datagrid-table-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  flex: 1;
+  position: relative;
+  background-color: var(--datagrid-bg-primary);
+}
+
+/* Better approach: Hide scrollbar visually but keep functionality */
+@media (min-width: 1024px) {
+  .datagrid-table-container {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  
+  .datagrid-table-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+  
+  /* Show scrollbar on hover for better UX */
+  .datagrid-table-container:hover {
+    scrollbar-width: thin; /* Firefox */
+    -ms-overflow-style: auto; /* IE and Edge */
+  }
+  
+  .datagrid-table-container:hover::-webkit-scrollbar {
+    display: block; /* Chrome, Safari and Opera */
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* For smaller screens, always show scrollbars */
+@media (max-width: 1023px) {
+  .datagrid-table-container {
+    scrollbar-width: thin;
+    -ms-overflow-style: auto;
+  }
 }
 
 /* Header - Modern Excel design */
@@ -884,4 +932,63 @@
   .datagrid-page-jump {
     order: -1;
   }
+}
+
+/* Responsive column sizing to prevent unnecessary horizontal scroll */
+@media (min-width: 1200px) {
+  /* On larger screens, ensure table uses full width when content allows */
+  .datagrid-table {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .datagrid-header-cell,
+  .datagrid-body-cell {
+    max-width: none;
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 768px) {
+  /* On medium screens, reduce column padding and sizes slightly */
+  .datagrid-header-cell,
+  .datagrid-body-cell {
+    padding: var(--datagrid-padding-sm) var(--datagrid-padding-md);
+  }
+  
+  .datagrid-table {
+    font-size: var(--datagrid-font-size-sm);
+  }
+}
+
+@media (max-width: 767px) {
+  /* On small screens, use more compact layout */
+  .datagrid-header-cell,
+  .datagrid-body-cell {
+    padding: var(--datagrid-padding-xs) var(--datagrid-padding-sm);
+    font-size: var(--datagrid-font-size-xs);
+  }
+  
+  .datagrid-table {
+    min-width: max-content;
+  }
+}
+
+/* Auto-fit table layout when there's space */
+.datagrid-table-container {
+  position: relative;
+}
+
+.datagrid-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* When table content is smaller than container, hide horizontal scroll */
+.datagrid-table-container.fits-content {
+  overflow-x: hidden;
+}
+
+/* When table content exceeds container, allow horizontal scroll */
+.datagrid-table-container.overflow-content {
+  overflow-x: auto;
 }

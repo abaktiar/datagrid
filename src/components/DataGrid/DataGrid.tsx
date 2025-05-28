@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback, memo } from 'react';
+import React, { useMemo, useState, useCallback, memo, useEffect, useRef } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
@@ -9,6 +9,9 @@ import {
   type ColumnFiltersState,
   type PaginationState,
   type RowSelectionState,
+  type ColumnDef,
+  type Table,
+  type Row,
 } from '@tanstack/react-table';
 
 import type { DataGridProps, DataGridColumn } from './types';
@@ -95,6 +98,10 @@ const DataGridComponent = function DataGrid<T = unknown>({
     position: { x: number; y: number };
   } | null>(null);
 
+  // Ref for detecting table overflow
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const [hasHorizontalOverflow, setHasHorizontalOverflow] = useState(false);
+
   // Use controlled state if provided, otherwise use internal state
   const sorting = controlledSorting ?? internalSorting;
   const columnFilters = controlledColumnFilters ?? internalColumnFilters;
@@ -123,7 +130,7 @@ const DataGridComponent = function DataGrid<T = unknown>({
     const selectionColumn: DataGridColumn<T> = {
       id: 'select',
       accessorKey: 'select',
-      header: ({ table }: { table: any }) => (
+      header: ({ table }: { table: Table<T> }) => (
         <input
           type='checkbox'
           checked={table.getIsAllRowsSelected()}
@@ -131,7 +138,7 @@ const DataGridComponent = function DataGrid<T = unknown>({
           className='datagrid-checkbox'
         />
       ),
-      cell: ({ row }: { row: any }) => (
+      cell: ({ row }: { row: Row<T> }) => (
         <input
           type='checkbox'
           checked={row.getIsSelected()}
@@ -149,9 +156,10 @@ const DataGridComponent = function DataGrid<T = unknown>({
     return [selectionColumn, ...processedColumns];
   }, [processedColumns, enableRowSelection]);
 
+  // Create React Table instance
   const table = useReactTable({
     data,
-    columns: finalColumns as any,
+    columns: finalColumns as ColumnDef<T>[], // Cast to ColumnDef to match TanStack Table requirements
     state: {
       sorting,
       columnFilters,
@@ -159,49 +167,27 @@ const DataGridComponent = function DataGrid<T = unknown>({
       rowSelection,
       globalFilter,
     },
-    onSortingChange: onSortingChange ?? setInternalSorting,
-    onColumnFiltersChange: onColumnFiltersChange ?? setInternalColumnFilters,
-    onPaginationChange: onPaginationChange ?? setInternalPagination,
-    onRowSelectionChange: onRowSelectionChange ?? setInternalRowSelection,
-    onGlobalFilterChange: onGlobalFilterChange ?? setInternalGlobalFilter,
+    enableRowSelection,
+    enableColumnResizing,
+    onSortingChange: onSortingChange || setInternalSorting,
+    onColumnFiltersChange: onColumnFiltersChange || setInternalColumnFilters,
+    onPaginationChange: onPaginationChange || setInternalPagination,
+    onRowSelectionChange: onRowSelectionChange || setInternalRowSelection,
+    onGlobalFilterChange: onGlobalFilterChange || setInternalGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: enableSorting && !manualSorting ? getSortedRowModel() : undefined,
-    getFilteredRowModel: enableFiltering && !manualFiltering ? getFilteredRowModel() : undefined,
-    getPaginationRowModel: enablePagination && !manualPagination ? getPaginationRowModel() : undefined,
-
-    // Manual operations for server-side
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
     manualSorting,
     manualFiltering,
     manualPagination,
-
-    // Row count for server-side pagination
-    ...(manualPagination && rowCount !== undefined && { rowCount }),
-
-    enableRowSelection,
-    enableMultiRowSelection,
-    enableSorting,
-    enableFilters: enableFiltering,
-    enableGlobalFilter: enableFiltering,
-    enableColumnResizing,
-
-    // Enable smooth real-time column resizing
-    columnResizeMode: 'onChange',
-    columnResizeDirection: 'ltr',
+    autoResetPageIndex: false,
+    rowCount: manualPagination ? rowCount : undefined,
   });
 
-  const containerClasses = ['datagrid-container', `datagrid-density-${density}`, `datagrid-theme-${theme}`, className]
-    .filter(Boolean)
-    .join(' ');
-
-  const tableClasses = ['datagrid-table', tableClassName].filter(Boolean).join(' ');
-
-  if (loading && LoadingComponent) {
-    return <LoadingComponent />;
-  }
-
-  if (data.length === 0 && EmptyComponent) {
-    return <EmptyComponent />;
-  }
+  // CSS classes
+  const containerClasses = `datagrid-container datagrid-density-${density} datagrid-theme-${theme} ${className}`;
+  const tableClasses = `datagrid-table ${tableClassName}`;
 
   // Handle table right-click
   const handleTableRightClick = useCallback(
@@ -222,12 +208,39 @@ const DataGridComponent = function DataGrid<T = unknown>({
     [onTableRightClick, tableContextMenu]
   );
 
+  // Check for horizontal overflow
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (tableContainerRef.current) {
+        const container = tableContainerRef.current;
+        const hasOverflow = container.scrollWidth > container.clientWidth;
+        setHasHorizontalOverflow(hasOverflow);
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+
+    // Also check when table data changes
+    const observer = new ResizeObserver(checkOverflow);
+    if (tableContainerRef.current) {
+      observer.observe(tableContainerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('resize', checkOverflow);
+      observer.disconnect();
+    };
+  }, [data, finalColumns]);
+
   const tableContent = (
-    <div className='datagrid-table-container' onContextMenu={handleTableRightClick}>
+    <div
+      ref={tableContainerRef}
+      className={`datagrid-table-container ${hasHorizontalOverflow ? 'overflow-content' : 'fits-content'}`}
+      onContextMenu={handleTableRightClick}>
       <table
         className={tableClasses}
-        data-resizing={table.getState().columnSizingInfo.isResizingColumn ? 'true' : 'false'}
-      >
+        data-resizing={table.getState().columnSizingInfo.isResizingColumn ? 'true' : 'false'}>
         <TableHeader table={table} className={headerClassName} customRenderer={customHeaderRenderer} />
         <TableBody
           table={table}
