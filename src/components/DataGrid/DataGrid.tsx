@@ -208,26 +208,34 @@ const DataGridComponent = function DataGrid<T = unknown>({
     [onTableRightClick, tableContextMenu]
   );
 
-  // Check for horizontal overflow
+  // Check for horizontal overflow with tolerance
   useEffect(() => {
     const checkOverflow = () => {
       if (tableContainerRef.current) {
         const container = tableContainerRef.current;
-        const hasOverflow = container.scrollWidth > container.clientWidth;
+        // Add tolerance of 5px to avoid false positives from rounding errors
+        const hasOverflow = container.scrollWidth > (container.clientWidth + 5);
         setHasHorizontalOverflow(hasOverflow);
       }
     };
 
-    checkOverflow();
+    // Delay the check to ensure DOM is fully rendered
+    const timeoutId = setTimeout(checkOverflow, 100);
+    
     window.addEventListener('resize', checkOverflow);
 
     // Also check when table data changes
-    const observer = new ResizeObserver(checkOverflow);
+    const observer = new ResizeObserver(() => {
+      // Debounce the resize checks
+      setTimeout(checkOverflow, 50);
+    });
+    
     if (tableContainerRef.current) {
       observer.observe(tableContainerRef.current);
     }
 
     return () => {
+      clearTimeout(timeoutId);
       window.removeEventListener('resize', checkOverflow);
       observer.disconnect();
     };
