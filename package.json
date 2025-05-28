@@ -1,19 +1,68 @@
 {
-  "name": "datagrid",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@abaktiar/datagrid",
+  "version": "1.0.1",
+  "description": "A powerful, feature-rich React DataGrid component with TypeScript support, built on TanStack Table",
+  "author": "abaktiar",
+  "license": "MIT",
+  "homepage": "https://github.com/abaktiar/datagrid#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abaktiar/datagrid.git"
+  },
+  "bugs": {
+    "url": "https://github.com/abaktiar/datagrid/issues"
+  },
+  "keywords": [
+    "react",
+    "datagrid",
+    "table",
+    "typescript",
+    "tanstack-table",
+    "data-table",
+    "excel-export",
+    "context-menu",
+    "pagination",
+    "filtering",
+    "sorting",
+    "virtualization",
+    "responsive"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
+    },
+    "./styles": "./dist/datagrid.css"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:lib": "vite build --config vite.lib.config.ts",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build:lib",
+    "publish:npm": "npm publish --access public"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
   },
   "dependencies": {
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.9",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
@@ -25,8 +74,12 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "terser": "^5.40.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4"
   }
 }

@@ -1,0 +1,47 @@
+# Development files
+src/App.tsx
+src/main.tsx
+src/App.css
+src/index.css
+src/vite-env.d.ts
+src/assets/
+src/utils/
+src/components/DemoControls/
+index.html
+public/
+vite.config.ts
+
+# Build tools and configs
+eslint.config.js
+tsconfig.app.json
+tsconfig.node.json
+vite.lib.config.ts
+
+# Development dependencies
+node_modules/
+.vscode/
+.idea/
+
+# Documentation and project files
+prd.md
+CONTEXT_MENU_UTILITIES.md
+
+# Version control
+.git/
+.gitignore
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment and temp files
+.env*
+.DS_Store
+*.log
+*.tgz
+
+# Development build outputs (keep only dist/)
+dev/
+build/
+coverage/
