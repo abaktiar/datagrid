@@ -66,3 +66,5 @@ export { TablePagination } from './TablePagination';
 export { GlobalFilter } from './GlobalFilter';
 export { ContextMenu } from './ContextMenu';
 export { TableContextMenu } from './TableContextMenu';
+// Line Bar Loader
+export { LineBarLoader } from './LineBarLoader';

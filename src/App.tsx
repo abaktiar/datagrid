@@ -1,7 +1,6 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import {
   DataGrid,
-  createEssentialTableActions,
   createExportExcelAction,
   createExportCsvAction,
   createExportJsonAction,
@@ -10,14 +9,12 @@ import {
   createRefreshAction,
   createShowStatsAction,
   createTableSeparator,
-  excelExportPresets,
   createFilteredExcelExport,
-  createSummaryExcelExport,
   createQuickExcelExport,
   createColumnSpecificExcelExport,
 } from './components/DataGrid';
-import { generateSampleData } from './utils/sampleData';
 import { DemoControls } from './components/DemoControls';
+import { generateSampleData } from './utils/sampleData';
 import './App.css';
 
 // Generate large sample data
@@ -34,7 +31,7 @@ function App() {
         enableSorting: true,
         enableFiltering: true,
         headerConfig: {
-          align: 'center',
+          align: 'center' as const,
           tooltip: 'Unique identifier for each record',
           className: 'id-header',
         },
@@ -316,6 +313,9 @@ function App() {
     searchDebounce: 300,
   });
 
+  // Loading state for backend pagination
+  const [loading, setLoading] = useState(false);
+
   // Simulate backend pagination
   const [backendState, setBackendState] = useState({
     pageIndex: 0,
@@ -326,9 +326,11 @@ function App() {
   // Get data based on pagination type
   const data = useMemo(() => {
     if (config.paginationType === 'backend') {
+      // For backend pagination, simulate server-side slicing
+      const totalData = allData.slice(0, config.dataSize);
       const start = backendState.pageIndex * backendState.pageSize;
       const end = start + backendState.pageSize;
-      return allData.slice(0, config.dataSize).slice(start, end);
+      return totalData.slice(start, end);
     } else {
       return allData.slice(0, config.dataSize);
     }
@@ -337,19 +339,62 @@ function App() {
   const handleConfigChange = useCallback((key: string, value: any) => {
     setConfig((prev) => ({ ...prev, [key]: value }));
 
-    // Reset backend pagination when changing page size
+    // Reset backend pagination when changing page size or pagination type
     if (key === 'pageSize') {
       setBackendState((prev) => ({ ...prev, pageSize: value, pageIndex: 0 }));
     }
+
+    // Reset pagination when switching between frontend and backend
+    if (key === 'paginationType') {
+      setBackendState((prev) => ({ ...prev, pageIndex: 0 }));
+
+      // Show loading when switching to backend pagination to simulate data fetch
+      if (value === 'backend') {
+        setLoading(true);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000); // 1 second for mode switch
+      }
+    }
   }, []);
 
-  const handleBackendPaginationChange = useCallback((pagination: any) => {
-    setBackendState((prev) => ({
-      ...prev,
-      pageIndex: pagination.pageIndex,
-      pageSize: pagination.pageSize,
-    }));
-  }, []);
+  const handleBackendPaginationChange = useCallback(
+    (updaterOrValue: any) => {
+      // Show loading when pagination changes (simulating backend request)
+      if (config.paginationType === 'backend') {
+        setLoading(true);
+
+        // Calculate the new pagination first
+        const newPagination =
+          typeof updaterOrValue === 'function'
+            ? updaterOrValue({ pageIndex: backendState.pageIndex, pageSize: backendState.pageSize })
+            : updaterOrValue;
+
+        // Simulate network delay - update state AFTER the delay
+        setTimeout(() => {
+          setBackendState((prev) => ({
+            ...prev,
+            pageIndex: newPagination.pageIndex,
+            pageSize: newPagination.pageSize,
+          }));
+          setLoading(false);
+        }, 2000); // 2 seconds - perfect for demo
+      } else {
+        // For frontend pagination, update immediately
+        const newPagination =
+          typeof updaterOrValue === 'function'
+            ? updaterOrValue({ pageIndex: backendState.pageIndex, pageSize: backendState.pageSize })
+            : updaterOrValue;
+
+        setBackendState((prev) => ({
+          ...prev,
+          pageIndex: newPagination.pageIndex,
+          pageSize: newPagination.pageSize,
+        }));
+      }
+    },
+    [config.paginationType, backendState.pageIndex, backendState.pageSize]
+  );
 
   return (
     <div className='app'>
@@ -370,6 +415,7 @@ function App() {
           density={config.density}
           theme={config.theme}
           pageSize={config.pageSize}
+          loading={loading}
           searchConfig={{
             enabled: config.enableGlobalSearch,
             placeholder: config.searchPlaceholder,

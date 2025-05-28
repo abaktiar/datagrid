@@ -279,7 +279,35 @@ const DataGridComponent = function DataGrid<T = unknown>({
     <div className={containerClasses}>
       {searchConfig?.position === 'top' && renderSearch()}
 
-      {tableContent}
+      <div style={{ position: 'relative' }}>
+        {/* Line Bar Loader - positioned on table top border */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '3px',
+          backgroundColor: loading ? 'rgba(229, 231, 235, 0.3)' : 'transparent',
+          zIndex: 1000,
+          overflow: 'hidden',
+          borderRadius: '0px',
+          transition: 'backgroundColor 0.2s ease-in-out',
+          opacity: loading ? 1 : 0
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: loading ? '-100%' : '100%',
+            width: '100%',
+            height: '100%',
+            background: 'linear-gradient(90deg, transparent 0%, #3b82f6 50%, transparent 100%)',
+            animation: loading ? 'line-bar-loader-slide 1.5s ease-in-out infinite' : 'none',
+            transition: 'left 0.3s ease-in-out'
+          }} />
+        </div>
+
+        {tableContent}
+      </div>
 
       {searchConfig?.position === 'bottom' && renderSearch()}
       {enablePagination && <TablePagination table={table} pageSizeOptions={pageSizeOptions} />}
