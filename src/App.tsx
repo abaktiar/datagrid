@@ -38,10 +38,10 @@ function App() {
         filterConfig: {
           enabled: true,
           placeholder: 'Filter by ID...',
-          type: 'number',
+          type: 'number' as const,
         },
         cellConfig: {
-          align: 'center',
+          align: 'center' as const,
           className: 'id-cell',
           style: { fontWeight: 'bold', color: '#666' },
           contextMenu: {
@@ -73,7 +73,7 @@ function App() {
         filterConfig: {
           enabled: true,
           placeholder: 'Search names...',
-          type: 'text',
+          type: 'text' as const,
         },
         cellConfig: {
           truncate: true,
@@ -236,7 +236,7 @@ function App() {
         filterConfig: {
           enabled: true,
           placeholder: 'Filter status...',
-          type: 'text',
+          type: 'text' as const,
         },
         cellConfig: {
           align: 'center',

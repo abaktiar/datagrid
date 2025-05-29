@@ -168,7 +168,9 @@ const DataGridComponent = function DataGrid<T = unknown>({
       globalFilter,
     },
     enableRowSelection,
-    enableColumnResizing,
+    enableColumnResizing: enableColumnResizing,
+    columnResizeMode: 'onEnd', // Use onEnd mode to prevent excessive re-renders during drag
+    columnResizeDirection: 'ltr',
     onSortingChange: onSortingChange || setInternalSorting,
     onColumnFiltersChange: onColumnFiltersChange || setInternalColumnFilters,
     onPaginationChange: onPaginationChange || setInternalPagination,

@@ -337,7 +337,7 @@
   opacity: 0.5;
 }
 
-/* Column Resizer - Modern Excel with smooth interaction */
+/* Column Resizer - AG-Grid style: Clean, minimal, professional */
 .datagrid-column-resizer {
   position: absolute;
   top: 0;
@@ -346,62 +346,179 @@
   height: 100%;
   cursor: col-resize;
   background-color: transparent;
-  z-index: 15;
-  transition: all var(--datagrid-transition-fast);
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  will-change: opacity;
 }
 
-.datagrid-column-resizer::before {
-  content: '';
+.datagrid-column-resizer-handle {
   position: absolute;
-  top: 10%;
+  top: 0;
   left: 50%;
   width: 2px;
-  height: 80%;
+  height: 100%;
   background-color: transparent;
   transform: translateX(-50%);
-  transition: all var(--datagrid-transition-fast);
-  border-radius: 1px;
+  transition: background-color 150ms ease;
+  will-change: background-color;
 }
 
-.datagrid-header-cell:hover .datagrid-column-resizer::before,
-.datagrid-column-resizer:hover::before {
-  background-color: var(--datagrid-accent-color);
-  box-shadow: 0 0 4px var(--datagrid-accent-color);
+/* Show resizer on header hover - AG-Grid style */
+.datagrid-header-cell:hover .datagrid-column-resizer {
+  opacity: 1;
 }
 
-.datagrid-column-resizer:active::before {
-  background-color: var(--datagrid-accent-hover);
-  width: 3px;
-  box-shadow: 0 0 6px var(--datagrid-accent-hover);
+.datagrid-header-cell:hover .datagrid-column-resizer-handle {
+  background-color: #0078d4;
 }
 
-/* Enhanced resizing states for smooth feedback */
+/* Active resizer states - minimal and clean */
+.datagrid-column-resizer:hover {
+  opacity: 1;
+}
+
+.datagrid-column-resizer:hover .datagrid-column-resizer-handle {
+  background-color: #106ebe;
+}
+
+.datagrid-column-resizer.active {
+  opacity: 1 !important;
+}
+
+.datagrid-column-resizer.active .datagrid-column-resizer-handle {
+  background-color: #005a9e;
+}
+
+/* Clean header cell states during resize - AG-Grid style */
+.datagrid-header-cell.resizing {
+  transition: none !important;
+  will-change: width;
+  position: relative;
+}
+
+/* Minimal visual feedback during resize */
+.datagrid-header-cell.resizing::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -1px;
+  width: 1px;
+  height: 100%;
+  background-color: #0078d4;
+  z-index: 1;
+}
+
+.datagrid-header-cell.table-resizing {
+  transition: none !important;
+  will-change: auto;
+}
+
+.datagrid-header-cell.table-resizing .datagrid-header-content {
+  pointer-events: none;
+}
+
+/* Disable sort interactions during resize */
+.datagrid-header-cell.table-resizing.sortable {
+  cursor: col-resize !important;
+}
+
+.datagrid-header-cell.table-resizing.sortable:hover {
+  background-color: inherit !important;
+  transform: none !important;
+}
+
+/* Ultra-smooth resizing: Disable ALL transitions during active resize */
 .datagrid-table[data-resizing="true"] {
   user-select: none;
   cursor: col-resize;
 }
 
-.datagrid-table[data-resizing="true"] .datagrid-header-cell {
-  transition: width var(--datagrid-transition-fast);
+.datagrid-table[data-resizing="true"] * {
+  transition: none !important;
+  will-change: width;
 }
 
 .datagrid-table[data-resizing="true"] .datagrid-body-cell {
-  transition: width var(--datagrid-transition-fast);
+  transition: none !important;
 }
 
-/* Active resizing state */
-.datagrid-header-cell[data-resizing="true"] {
-  background-color: var(--datagrid-accent-light);
-  border-right-color: var(--datagrid-accent-color);
-  border-right-width: 2px;
+.datagrid-table[data-resizing="true"] .datagrid-header-cell {
+  transition: none !important;
 }
 
-.datagrid-header-cell[data-resizing="true"] .datagrid-column-resizer::before {
-  background-color: var(--datagrid-accent-hover);
-  width: 3px;
-  box-shadow: 0 0 8px var(--datagrid-accent-hover);
-  height: 100%;
-  top: 0;
+/* Re-enable smooth transitions only when NOT resizing */
+.datagrid-table:not([data-resizing="true"]) .datagrid-header-cell {
+  transition: background-color var(--datagrid-transition-fast),
+              border-color var(--datagrid-transition-fast);
+  will-change: auto;
+}
+
+.datagrid-table:not([data-resizing="true"]) .datagrid-body-cell {
+  transition: background-color var(--datagrid-transition-fast);
+  will-change: auto;
+}
+
+/* Force hardware acceleration for smooth resizing */
+.datagrid-header-cell {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.datagrid-body-cell {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Touch device optimizations - AG-Grid style */
+@media (hover: none) and (pointer: coarse) {
+  .datagrid-column-resizer {
+    width: 8px;
+    right: -4px;
+    opacity: 0.3;
+  }
+  
+  .datagrid-column-resizer-handle {
+    width: 3px;
+    background-color: #0078d4;
+  }
+}
+
+/* High DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .datagrid-column-resizer-handle {
+    width: 1px;
+  }
+  
+  .datagrid-column-resizer.active .datagrid-column-resizer-handle,
+  .datagrid-column-resizer:hover .datagrid-column-resizer-handle {
+    width: 2px;
+  }
+
+  .datagrid-header-cell.resizing::after {
+    width: 1px;
+  }
+}
+
+/* Dark theme adaptations - AG-Grid style */
+.datagrid-theme-dark .datagrid-column-resizer-handle {
+  background-color: transparent;
+}
+
+.datagrid-theme-dark .datagrid-header-cell:hover .datagrid-column-resizer-handle {
+  background-color: #60a5fa;
+}
+
+.datagrid-theme-dark .datagrid-column-resizer:hover .datagrid-column-resizer-handle {
+  background-color: #3b82f6;
+}
+
+.datagrid-theme-dark .datagrid-column-resizer.active .datagrid-column-resizer-handle {
+  background-color: #2563eb;
+}
+
+.datagrid-theme-dark .datagrid-header-cell.resizing::after {
+  background-color: #60a5fa;
 }
 
 /* Body - Modern Excel design with smooth hover effects */
