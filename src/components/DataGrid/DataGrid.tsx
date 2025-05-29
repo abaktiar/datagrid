@@ -20,6 +20,7 @@ import { TableBody } from './TableBody';
 import { TablePagination } from './TablePagination';
 import { GlobalFilter } from './GlobalFilter';
 import { TableContextMenu } from './TableContextMenu';
+import { FloatingActionDock } from './FloatingActionDock';
 import './DataGrid.css';
 
 const DataGridComponent = function DataGrid<T = unknown>({
@@ -56,6 +57,7 @@ const DataGridComponent = function DataGrid<T = unknown>({
   },
   tableContextMenu,
   onTableRightClick,
+  floatingActionDock,
   onRowClick,
   onRowDoubleClick,
   onCellClick,
@@ -285,6 +287,13 @@ const DataGridComponent = function DataGrid<T = unknown>({
     );
   };
 
+  // Get selected data for floating action dock
+  const selectedRowIndices = Object.keys(rowSelection)
+    .filter(key => rowSelection[key])
+    .map(Number);
+  const selectedData = selectedRowIndices.map(index => data[index]).filter(Boolean);
+
+
   return (
     <div className={containerClasses}>
       {searchConfig?.position === 'top' && renderSearch()}
@@ -330,6 +339,19 @@ const DataGridComponent = function DataGrid<T = unknown>({
           onClose={() => setTableContextMenuState(null)}
           data={data}
           className={tableContextMenu.className}
+        />
+      )}
+
+      {/* Floating Action Dock */}
+      {floatingActionDock?.enabled && floatingActionDock.items.length > 0 && (
+        <FloatingActionDock
+          selectedData={selectedData}
+          selectedRowIndices={selectedRowIndices}
+          items={floatingActionDock.items}
+          position={floatingActionDock.position}
+          showCount={floatingActionDock.showCount}
+          hideDelay={floatingActionDock.hideDelay}
+          className={floatingActionDock.className}
         />
       )}
     </div>

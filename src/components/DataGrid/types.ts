@@ -55,9 +55,9 @@ export interface DataGridColumn<T = any> extends ColumnDef<T> {
 }
 
 export interface ContextMenuItem<T = any> {
-  label: string;
+  label?: string;
   icon?: React.ReactNode;
-  onClick: (value: any, row: T) => void;
+  onClick?: (value: any, row: T) => void;
   disabled?: boolean | ((value: any, row: T) => boolean);
   separator?: boolean;
   className?: string;
@@ -70,6 +70,23 @@ export interface TableContextMenuItem<T = any> {
   disabled?: boolean | ((data: T[]) => boolean);
   separator?: boolean;
   className?: string;
+}
+
+export interface FloatingActionItem<T = any> {
+  label: string;
+  icon?: React.ReactNode;
+  onClick: (selectedData: T[], selectedRows: number[]) => void;
+  disabled?: boolean | ((selectedData: T[], selectedRows: number[]) => boolean);
+  separator?: boolean;
+  className?: string;
+  variant?: 'default' | 'primary' | 'danger' | 'success';
+  // Allow custom button component
+  customButton?: React.ComponentType<{
+    onClick: () => void;
+    disabled?: boolean;
+    className?: string;
+    children: React.ReactNode;
+  }>;
 }
 
 export interface DataGridProps<T = any> {
@@ -126,6 +143,16 @@ export interface DataGridProps<T = any> {
     className?: string;
   };
   onTableRightClick?: (event: React.MouseEvent) => void;
+
+  // Floating action dock for selected rows
+  floatingActionDock?: {
+    enabled?: boolean;
+    items: FloatingActionItem<T>[];
+    className?: string;
+    position?: 'bottom-left' | 'bottom-right' | 'bottom-center' | 'top-left' | 'top-right' | 'top-center';
+    showCount?: boolean;
+    hideDelay?: number; // Auto-hide delay in ms when no rows selected
+  };
 
   // Event callbacks
   onRowClick?: (row: T) => void;

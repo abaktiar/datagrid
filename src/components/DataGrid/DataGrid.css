@@ -1086,3 +1086,316 @@
 .datagrid-table-container *::after {
   box-sizing: border-box;
 }
+
+/* Floating Action Dock Styles */
+.datagrid-floating-dock {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: auto;
+  max-width: 90vw;
+  min-width: 400px;
+}
+
+/* Position variants */
+.datagrid-floating-dock.dock-position-bottom-center {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.datagrid-floating-dock.dock-position-bottom-left {
+  bottom: 20px;
+  left: 20px;
+  transform: none;
+}
+
+.datagrid-floating-dock.dock-position-bottom-right {
+  bottom: 20px;
+  right: 20px;
+  transform: none;
+}
+
+.datagrid-floating-dock.dock-position-top-center {
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.datagrid-floating-dock.dock-position-top-left {
+  top: 20px;
+  left: 20px;
+  transform: none;
+}
+
+.datagrid-floating-dock.dock-position-top-right {
+  top: 20px;
+  right: 20px;
+  transform: none;
+}
+
+.datagrid-floating-dock-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  gap: 16px;
+}
+
+.datagrid-floating-dock-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.datagrid-floating-dock-badge::before {
+  content: "✓";
+  font-size: 12px;
+  width: 16px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.datagrid-floating-dock-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.datagrid-floating-dock-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+  text-decoration: none;
+  outline: none;
+  min-height: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.datagrid-floating-dock-button:hover:not(.datagrid-floating-dock-button-disabled) {
+  /* Minimal hover effect - just slight brightness change */
+  filter: brightness(1.05);
+}
+
+.datagrid-floating-dock-button:active:not(.datagrid-floating-dock-button-disabled) {
+  filter: brightness(0.95);
+}
+
+.datagrid-floating-dock-button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.datagrid-floating-dock-button-icon {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.datagrid-floating-dock-button-label {
+  line-height: 1;
+  font-size: 13px;
+}
+
+.datagrid-floating-dock-separator {
+  width: 1px;
+  height: 20px;
+  background-color: rgba(0, 0, 0, 0.15);
+  margin: 0 4px;
+  border-radius: 0.5px;
+}
+
+/* Variant styles */
+.datagrid-floating-dock-button.variant-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.datagrid-floating-dock-button.variant-primary:hover:not(.datagrid-floating-dock-button-disabled) {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+}
+
+.datagrid-floating-dock-button.variant-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.datagrid-floating-dock-button.variant-danger:hover:not(.datagrid-floating-dock-button-disabled) {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
+
+.datagrid-floating-dock-button.variant-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.datagrid-floating-dock-button.variant-success:hover:not(.datagrid-floating-dock-button-disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.datagrid-floating-dock-button.variant-default {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #374151;
+}
+
+.datagrid-floating-dock-button.variant-default:hover:not(.datagrid-floating-dock-button-disabled) {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(0, 0, 0, 0.2);
+  color: #111827;
+}
+
+/* Dark theme styles for floating dock */
+.datagrid-theme-dark .datagrid-floating-dock-container {
+  background: rgba(31, 41, 55, 0.95);
+  border-color: rgba(75, 85, 99, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.datagrid-theme-dark .datagrid-floating-dock-badge {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.datagrid-theme-dark .datagrid-floating-dock-separator {
+  background-color: rgba(156, 163, 175, 0.3);
+}
+
+.datagrid-theme-dark .datagrid-floating-dock-button.variant-default {
+  background: rgba(55, 65, 81, 0.9);
+  border: 1px solid rgba(156, 163, 175, 0.2);
+  color: #f9fafb;
+}
+
+.datagrid-theme-dark .datagrid-floating-dock-button.variant-default:hover:not(.datagrid-floating-dock-button-disabled) {
+  background: rgba(75, 85, 99, 1);
+  border-color: rgba(156, 163, 175, 0.4);
+  color: #ffffff;
+}
+
+/* Responsive design for floating dock */
+@media (max-width: 768px) {
+  .datagrid-floating-dock {
+    bottom: 10px;
+    min-width: 320px;
+    max-width: 95vw;
+  }
+  
+  .datagrid-floating-dock-container {
+    padding: 10px 16px;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .datagrid-floating-dock-button {
+    padding: 6px 10px;
+    font-size: 12px;
+    min-height: 28px;
+  }
+  
+  .datagrid-floating-dock-button-label {
+    display: none;
+  }
+  
+  .datagrid-floating-dock-actions {
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .datagrid-floating-dock-badge {
+    font-size: 13px;
+    padding: 4px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .datagrid-floating-dock {
+    min-width: 280px;
+  }
+  
+  .datagrid-floating-dock-button-icon {
+    font-size: 16px;
+  }
+}
+
+/* Simplified animation keyframes for floating dock */
+@keyframes datagrid-dock-slide-up {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes datagrid-dock-slide-down {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, 8px) scale(0.98);
+  }
+}
+
+.datagrid-floating-dock[data-entering="true"] {
+  animation: datagrid-dock-slide-up 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.datagrid-floating-dock[data-leaving="true"] {
+  animation: datagrid-dock-slide-down 200ms cubic-bezier(0.55, 0.06, 0.68, 0.19);
+  animation-fill-mode: forwards;
+}
+
+/* Ensure smooth transitions */
+.datagrid-floating-dock {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Glassmorphism effect */
+.datagrid-floating-dock-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}

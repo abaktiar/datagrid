@@ -13,7 +13,9 @@ A powerful, feature-rich React DataGrid component with TypeScript support, built
 - **📊 Rich Data Operations** - Sorting, filtering, pagination, and global search
 - **🖱️ Context Menus** - Powerful right-click context menus for cells and tables
 - **📤 Export Capabilities** - Export to CSV, JSON, and Excel formats
-- **🔧 Flexible Configuration** - Extensive customization options
+- **🚀 Floating Action Dock** - Customizable floating buttons for bulk operations
+- **🎨 Button Customization** - Custom icons, variants, and complete button components
+- **� Flexible Configuration** - Extensive customization options
 - **📱 Responsive Design** - Mobile-friendly with overflow handling
 - **🎛️ Advanced Features** - Row selection, column resizing, and more
 
@@ -163,6 +165,134 @@ const tableContextMenu = {
 />
 ```
 
+### Floating Action Dock
+
+The Floating Action Dock provides customizable floating buttons for bulk operations on selected rows:
+
+```tsx
+import {
+  DataGrid,
+  createCommonFloatingActions,
+  createExportSelectedToExcelAction,
+  createFloatingActionSeparator
+} from '@abaktiar/datagrid';
+
+// Basic floating dock with built-in actions
+<DataGrid
+  data={data}
+  columns={columns}
+  enableRowSelection={true}
+  floatingActionDock={{
+    enabled: true,
+    position: 'bottom-center',
+    showCount: true,
+    items: createCommonFloatingActions({
+      enableExportExcel: true,
+      enableExportCSV: true,
+    }),
+  }}
+/>
+
+// Advanced customization with custom buttons
+const CustomExcelButton = ({ onClick, disabled, children }) => (
+  <button
+    onClick={onClick}
+    disabled={disabled}
+    style={{
+      background: 'linear-gradient(135deg, #2E8B57, #228B22)',
+      color: 'white',
+      border: 'none',
+      borderRadius: '8px',
+      padding: '10px 16px',
+      fontSize: '13px',
+      fontWeight: '600',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+    }}
+  >
+    {children}
+  </button>
+);
+
+<DataGrid
+  data={data}
+  columns={columns}
+  enableRowSelection={true}
+  floatingActionDock={{
+    enabled: true,
+    position: 'bottom-center',
+    items: [
+      // Customized built-in actions
+      ...createCommonFloatingActions({
+        excelOptions: {
+          label: 'Premium Excel Export',
+          icon: '🚀',
+          customButton: CustomExcelButton,
+        },
+        csvOptions: {
+          label: 'Export CSV',
+          icon: '📊',
+          variant: 'primary',
+        },
+      }),
+      
+      // Add separator
+      createFloatingActionSeparator(),
+      
+      // Custom business actions
+      {
+        label: 'Archive Selected',
+        icon: '📦',
+        variant: 'default',
+        onClick: (selectedData) => {
+          console.log('Archiving:', selectedData);
+        },
+      },
+    ],
+  }}
+/>
+```
+
+#### Floating Dock Configuration
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | `boolean` | `false` | Enable the floating dock |
+| `position` | `'bottom-left' \| 'bottom-center' \| 'bottom-right' \| 'top-left' \| 'top-center' \| 'top-right'` | `'bottom-center'` | Dock position |
+| `showCount` | `boolean` | `true` | Show selected items count |
+| `items` | `FloatingActionItem[]` | `[]` | Array of action items |
+
+#### Creating Custom Floating Actions
+
+```tsx
+// Built-in export actions with customization
+createExportSelectedToExcelAction({
+  // File options
+  filename: 'my-export.xlsx',
+  columnMapping: { id: 'ID', name: 'Full Name' },
+  
+  // Visual customization
+  label: 'Download Excel',
+  icon: '💾',
+  variant: 'success',
+  className: 'my-custom-class',
+  customButton: MyCustomButton,
+})
+
+// Completely custom action
+{
+  label: 'Custom Action',
+  icon: '⭐',
+  variant: 'primary',
+  onClick: (selectedData, selectedIndices) => {
+    // Your custom logic here
+    console.log('Selected:', selectedData);
+  },
+  customButton: MyCustomButtonComponent, // Optional
+}
+```
+
 ### Custom Cell Formatting
 
 ```tsx
@@ -227,6 +357,7 @@ function ControlledDataGrid() {
 | `density` | `'compact' \| 'comfortable' \| 'spacious'` | `'comfortable'` | Table density |
 | `theme` | `'light' \| 'dark' \| 'auto'` | `'light'` | Theme |
 | `loading` | `boolean` | `false` | Show loading indicator |
+| `floatingActionDock` | `FloatingActionDockConfig` | `undefined` | Floating action dock configuration |
 
 ### Column Configuration
 
@@ -280,6 +411,13 @@ interface DataGridColumn<T> {
 - `createExportExcelAction()` - Export table to Excel
 - `createPrintAction()` - Print table
 - `createRefreshAction()` - Refresh table data
+
+### Floating Action Utilities
+
+- `createExportSelectedToExcelAction()` - Excel export for selected rows
+- `createExportSelectedToCSVAction()` - CSV export for selected rows
+- `createFloatingActionSeparator()` - Visual separator for floating actions
+- `createCommonFloatingActions()` - Bundle of common floating actions
 
 ### Excel Export Utilities
 
@@ -368,6 +506,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Issues](https://github.com/abaktiar/datagrid/issues)
 
 ## 📝 Changelog
+
+### 1.1.0
+- 🚀 **NEW: Floating Action Dock** - Customizable floating buttons for bulk operations
+- 🎨 **NEW: Button Customization** - Custom icons, variants, and complete button components
+- 📊 **Enhanced Export** - Floating Excel and CSV export for selected rows
+- ⚡ **Smooth Animations** - Polished enter/exit animations for floating dock
+- 🔧 **Flexible Configuration** - Extensive customization options for floating actions
+- 📚 **Comprehensive Examples** - Multiple styling themes (Material, Glass, Neon)
+
+### 1.0.1
+- Bug fixes and performance improvements
+- Enhanced TypeScript definitions
 
 ### 1.0.0
 - Initial release

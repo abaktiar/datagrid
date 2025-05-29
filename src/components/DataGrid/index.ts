@@ -2,7 +2,7 @@
 export { DataGrid } from './DataGrid';
 
 // Types
-export type { DataGridProps, DataGridColumn, ContextMenuItem, TableContextMenuItem } from './types';
+export type { DataGridProps, DataGridColumn, ContextMenuItem, TableContextMenuItem, FloatingActionItem } from './types';
 
 // Context Menu Utilities
 export {
@@ -58,6 +58,17 @@ export {
 } from './excelUtils';
 
 export type { ExcelExportOptions } from './excelUtils';
+
+// Floating Action Dock
+export { FloatingActionDock } from './FloatingActionDock';
+
+// Floating Action Utilities
+export {
+  createExportSelectedToExcelAction,
+  createExportSelectedToCSVAction,
+  createFloatingActionSeparator,
+  createCommonFloatingActions,
+} from './floatingActionUtils';
 
 // Individual components (for advanced usage)
 export { TableHeader } from './TableHeader';

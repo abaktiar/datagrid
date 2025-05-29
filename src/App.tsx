@@ -12,6 +12,7 @@ import {
   createFilteredExcelExport,
   createQuickExcelExport,
   createColumnSpecificExcelExport,
+  createCommonFloatingActions,
 } from './components/DataGrid';
 import { DemoControls } from './components/DemoControls';
 import { generateSampleData } from './utils/sampleData';
@@ -311,6 +312,16 @@ function App() {
     searchPlaceholder: 'Search all columns...',
     showSearchIcon: true,
     searchDebounce: 300,
+    // Floating Action Dock configuration
+    enableFloatingDock: true,
+    floatingDockPosition: 'bottom-center' as
+      | 'bottom-left'
+      | 'bottom-right'
+      | 'bottom-center'
+      | 'top-left'
+      | 'top-right'
+      | 'top-center',
+    showSelectionCount: true,
   });
 
   // Loading state for backend pagination
@@ -335,6 +346,79 @@ function App() {
       return allData.slice(0, config.dataSize);
     }
   }, [config.paginationType, config.dataSize, backendState]);
+
+  // Handle delete action
+  const handleDeleteSelected = useCallback((selectedData: any[], selectedIndices: number[]) => {
+    const confirmMessage = `Are you sure you want to delete ${selectedData.length} selected employee(s)? This action cannot be undone.`;
+    if (window.confirm(confirmMessage)) {
+      console.log(
+        'Deleting employees:',
+        selectedData.map((emp) => emp.name)
+      );
+      alert(`Deleted ${selectedData.length} employee(s) successfully!`);
+      // In a real application, you would make an API call here to delete the data
+    }
+  }, []);
+
+  // Example custom button components
+  const CustomDeleteButton = ({ onClick, disabled, children }: any) => (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        background: 'linear-gradient(135deg, #ff6b6b, #ee5a24)',
+        color: 'white',
+        border: 'none',
+        borderRadius: '6px',
+        padding: '8px 12px',
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.6 : 1,
+        fontSize: '13px',
+        fontWeight: '500',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px',
+      }}>
+      {children}
+    </button>
+  );
+
+  // Custom Excel button with premium styling
+  const CustomExcelButton = ({ onClick, disabled, children }: any) => (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        background: 'linear-gradient(135deg, #2E8B57, #228B22)',
+        color: 'white',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        borderRadius: '8px',
+        padding: '10px 16px',
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.6 : 1,
+        fontSize: '13px',
+        fontWeight: '600',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        boxShadow: '0 4px 12px rgba(46, 139, 87, 0.3)',
+        transition: 'all 0.2s ease',
+      }}
+      onMouseEnter={(e) => {
+        if (!disabled) {
+          e.currentTarget.style.transform = 'translateY(-1px)';
+          e.currentTarget.style.boxShadow = '0 6px 16px rgba(46, 139, 87, 0.4)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!disabled) {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(46, 139, 87, 0.3)';
+        }
+      }}>
+      {children}
+    </button>
+  );
 
   const handleConfigChange = useCallback((key: string, value: any) => {
     setConfig((prev) => ({ ...prev, [key]: value }));
@@ -571,6 +655,77 @@ function App() {
 
                   customExport.onClick(analysisData);
                 },
+              },
+            ],
+          }}
+          // Floating Action Dock configuration
+          floatingActionDock={{
+            enabled: config.enableFloatingDock,
+            position: config.floatingDockPosition,
+            showCount: config.showSelectionCount,
+            hideDelay: 200,
+            items: [
+              // Use built-in actions with customization
+              ...createCommonFloatingActions({
+                enableExportExcel: true,
+                enableExportCSV: true,
+                excelOptions: {
+                  filename: `selected_employees_${new Date().toISOString().split('T')[0]}`,
+                  columnMapping: {
+                    id: 'Employee ID',
+                    name: 'Full Name',
+                    email: 'Email Address',
+                    age: 'Age (Years)',
+                    department: 'Department',
+                    salary: 'Annual Salary',
+                    startDate: 'Start Date',
+                    status: 'Employment Status',
+                  },
+                  // Complete customization with custom button component
+                  // label: 'Premium Excel Export',
+                  // icon: '🚀',
+                  // customButton: CustomExcelButton,
+                },
+                csvOptions: {
+                  filename: `selected_employees_${new Date().toISOString().split('T')[0]}`,
+                  columnMapping: {
+                    id: 'Employee ID',
+                    name: 'Full Name',
+                    email: 'Email Address',
+                    age: 'Age (Years)',
+                    department: 'Department',
+                    salary: 'Annual Salary',
+                    startDate: 'Start Date',
+                    status: 'Employment Status',
+                  },
+                  // Custom CSV button styling
+                  label: 'Export CSV',
+                  icon: '📊',
+                  variant: 'primary' as const,
+                },
+              }),
+
+              // Add separator
+              { separator: true, label: '', onClick: () => {} },
+
+              // Custom copy action with custom styling
+              {
+                label: 'Copy Names',
+                icon: '📋',
+                variant: 'default' as const,
+                onClick: (selectedData) => {
+                  const names = selectedData.map((emp: any) => emp.name).join(', ');
+                  navigator.clipboard.writeText(names);
+                  alert(`Copied ${selectedData.length} names to clipboard!`);
+                },
+              },
+
+              // Custom delete with custom button component
+              {
+                label: 'Delete Selected',
+                icon: '🗑️',
+                customButton: CustomDeleteButton,
+                onClick: handleDeleteSelected,
               },
             ],
           }}

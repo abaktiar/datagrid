@@ -17,6 +17,10 @@ interface DemoConfig {
   searchPlaceholder: string
   showSearchIcon: boolean
   searchDebounce: number
+  // Floating Action Dock configuration
+  enableFloatingDock: boolean
+  floatingDockPosition: 'bottom-left' | 'bottom-right' | 'bottom-center' | 'top-left' | 'top-right' | 'top-center'
+  showSelectionCount: boolean
 }
 
 interface DemoControlsProps {
@@ -220,6 +224,51 @@ export function DemoControls({ config, onConfigChange }: DemoControlsProps) {
                 <option value={50}>50</option>
                 <option value={100}>100</option>
               </select>
+            </label>
+          </div>
+        </div>
+
+        {/* Floating Action Dock */}
+        <div className="control-section">
+          <h3>Floating Action Dock</h3>
+          <div className="control-group">
+            <label className="control-item">
+              <input
+                type="checkbox"
+                checked={config.enableFloatingDock}
+                onChange={handleCheckboxChange('enableFloatingDock')}
+                className="demo-checkbox"
+                disabled={!config.enableRowSelection}
+              />
+              <span>Enable Floating Dock</span>
+            </label>
+
+            <label className="control-item">
+              <span>Dock Position:</span>
+              <select
+                value={config.floatingDockPosition}
+                onChange={handleSelectChange('floatingDockPosition')}
+                className="demo-select"
+                disabled={!config.enableFloatingDock || !config.enableRowSelection}
+              >
+                <option value="bottom-left">Bottom Left</option>
+                <option value="bottom-center">Bottom Center</option>
+                <option value="bottom-right">Bottom Right</option>
+                <option value="top-left">Top Left</option>
+                <option value="top-center">Top Center</option>
+                <option value="top-right">Top Right</option>
+              </select>
+            </label>
+
+            <label className="control-item">
+              <input
+                type="checkbox"
+                checked={config.showSelectionCount}
+                onChange={handleCheckboxChange('showSelectionCount')}
+                className="demo-checkbox"
+                disabled={!config.enableFloatingDock || !config.enableRowSelection}
+              />
+              <span>Show Selection Count</span>
             </label>
           </div>
         </div>
