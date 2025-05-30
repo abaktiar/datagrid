@@ -1,6 +1,10 @@
 import { useState, useMemo, useCallback } from 'react';
 import {
   DataGrid,
+  DataGridThemeProvider,
+  useDataGridTheme,
+  createCustomTheme,
+  defaultThemes,
   createExportExcelAction,
   createExportCsvAction,
   createExportJsonAction,
@@ -21,7 +25,9 @@ import './App.css';
 // Generate large sample data
 const allData = generateSampleData(1000);
 
-function App() {
+// Inner App component that uses theme hooks
+function AppContent() {
+  const { setTheme, setVariant } = useDataGridTheme();
   // Memoize columns to prevent unnecessary re-renders
   const columns = useMemo(
     () => [
@@ -322,6 +328,26 @@ function App() {
       | 'top-right'
       | 'top-center',
     showSelectionCount: true,
+    // Theme System configuration
+    themePreset: 'default' as
+      | 'default'
+      | 'material'
+      | 'minimal'
+      | 'github'
+      | 'corporate'
+      | 'shadcn'
+      | 'glassmorphism'
+      | 'uniform'
+      | 'custom',
+    themeVariant: 'light' as 'light' | 'dark' | 'auto',
+    // Custom theme builder
+    customTheme: {
+      primaryColor: '#3b82f6',
+      backgroundColor: '#ffffff',
+      headerColor: '#f1f5f9',
+      borderRadius: '6px',
+      fontSize: '13px',
+    },
   });
 
   // Loading state for backend pagination
@@ -420,27 +446,126 @@ function App() {
     </button>
   );
 
-  const handleConfigChange = useCallback((key: string, value: any) => {
-    setConfig((prev) => ({ ...prev, [key]: value }));
+  const handleConfigChange = useCallback(
+    (key: string, value: any) => {
+      setConfig((prev) => ({ ...prev, [key]: value }));
 
-    // Reset backend pagination when changing page size or pagination type
-    if (key === 'pageSize') {
-      setBackendState((prev) => ({ ...prev, pageSize: value, pageIndex: 0 }));
-    }
+      // Handle theme changes
+      if (key === 'themePreset') {
+        if (value === 'custom') {
+          // Create custom theme based on current customTheme config
+          const customTheme = createCustomTheme(defaultThemes.default.config, {
+            shared: {
+              typography: {
+                fontSizeMd: config.customTheme.fontSize,
+              },
+              borders: {
+                radius: config.customTheme.borderRadius,
+              },
+              cssVars: {
+                '--datagrid-font-size': config.customTheme.fontSize,
+                '--datagrid-border-radius': config.customTheme.borderRadius,
+              },
+            },
+            light: {
+              colors: {
+                primary: config.customTheme.primaryColor,
+                primaryHover: config.customTheme.primaryColor,
+                bgPrimary: config.customTheme.backgroundColor,
+                bgHeader: config.customTheme.headerColor,
+                textAccent: config.customTheme.primaryColor,
+                borderAccent: config.customTheme.primaryColor,
+                buttonPrimary: config.customTheme.primaryColor,
+                buttonPrimaryHover: config.customTheme.primaryColor,
+              },
+              cssVars: {
+                '--datagrid-bg-primary': config.customTheme.backgroundColor,
+                '--datagrid-bg-header': config.customTheme.headerColor,
+                '--datagrid-accent-color': config.customTheme.primaryColor,
+              },
+            },
+            dark: {
+              colors: {
+                primary: config.customTheme.primaryColor,
+                primaryHover: config.customTheme.primaryColor,
+                textAccent: config.customTheme.primaryColor,
+                borderAccent: config.customTheme.primaryColor,
+                buttonPrimary: config.customTheme.primaryColor,
+                buttonPrimaryHover: config.customTheme.primaryColor,
+              },
+              cssVars: {
+                '--datagrid-accent-color': config.customTheme.primaryColor,
+              },
+            },
+          });
+          // Apply custom theme using the theme system
+          const style = document.createElement('style');
+          style.id = 'custom-datagrid-theme';
 
-    // Reset pagination when switching between frontend and backend
-    if (key === 'paginationType') {
-      setBackendState((prev) => ({ ...prev, pageIndex: 0 }));
+          // Remove existing custom theme
+          const existing = document.getElementById('custom-datagrid-theme');
+          if (existing) existing.remove();
 
-      // Show loading when switching to backend pagination to simulate data fetch
-      if (value === 'backend') {
-        setLoading(true);
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000); // 1 second for mode switch
+          style.textContent = `
+          :root {
+            --datagrid-bg-primary: ${config.customTheme.backgroundColor} !important;
+            --datagrid-bg-header: ${config.customTheme.headerColor} !important;
+            --datagrid-accent-color: ${config.customTheme.primaryColor} !important;
+            --datagrid-border-radius: ${config.customTheme.borderRadius} !important;
+            --datagrid-font-size: ${config.customTheme.fontSize} !important;
+          }
+        `;
+          document.head.appendChild(style);
+        } else {
+          // Remove custom theme styles
+          const existing = document.getElementById('custom-datagrid-theme');
+          if (existing) existing.remove();
+          setTheme(value);
+        }
       }
-    }
-  }, []);
+      if (key === 'themeVariant') {
+        setVariant(value === 'auto' ? 'light' : value);
+      }
+
+      // Handle custom theme updates
+      if (key === 'customTheme') {
+        if (config.themePreset === 'custom') {
+          // Update custom theme immediately
+          const style = document.getElementById('custom-datagrid-theme');
+          if (style) {
+            style.textContent = `
+            :root {
+              --datagrid-bg-primary: ${value.backgroundColor} !important;
+              --datagrid-bg-header: ${value.headerColor} !important;
+              --datagrid-accent-color: ${value.primaryColor} !important;
+              --datagrid-border-radius: ${value.borderRadius} !important;
+              --datagrid-font-size: ${value.fontSize} !important;
+            }
+          `;
+          }
+        }
+      }
+
+      // Reset backend pagination when changing page size or pagination type
+      if (key === 'pageSize') {
+        setBackendState((prev) => ({ ...prev, pageSize: value, pageIndex: 0 }));
+      }
+
+      // Reset pagination when switching between frontend and backend
+      if (key === 'paginationType') {
+        setBackendState((prev) => ({ ...prev, pageIndex: 0 }));
+
+        // Show loading when switching to backend pagination to simulate data fetch
+        if (value === 'backend') {
+          setLoading(true);
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000); // 1 second for mode switch
+        }
+      }
+    },
+    [setTheme, setVariant]
+  );
 
   const handleBackendPaginationChange = useCallback(
     (updaterOrValue: any) => {
@@ -744,6 +869,15 @@ function App() {
         />
       </div>
     </div>
+  );
+}
+
+// Main App component with theme provider
+function App() {
+  return (
+    <DataGridThemeProvider defaultTheme='default' defaultVariant='light'>
+      <AppContent />
+    </DataGridThemeProvider>
   );
 }
 

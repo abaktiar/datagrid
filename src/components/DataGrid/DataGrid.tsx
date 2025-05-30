@@ -21,7 +21,7 @@ import { TablePagination } from './TablePagination';
 import { GlobalFilter } from './GlobalFilter';
 import { TableContextMenu } from './TableContextMenu';
 import { FloatingActionDock } from './FloatingActionDock';
-import './DataGrid.css';
+import './theme/DataGridTheme.css';
 
 const DataGridComponent = function DataGrid<T = unknown>({
   data,
